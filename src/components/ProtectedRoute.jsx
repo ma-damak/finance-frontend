@@ -1,8 +1,18 @@
 import { Navigate } from 'react-router-dom'
 import useAuthContext from '../hooks/useAuthContext'
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const [auth] = useAuthContext()
-  return auth.user ? children : <Navigate to="login" />
+
+  if (!auth.user) {
+    return <Navigate to="/login" />
+  }
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(auth.user.role)) {
+    return <Navigate to="/" />
+  }
+
+  return children
 }
+
 export default ProtectedRoute

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useAuthContext from './useAuthContext'
 import userService from '../services/users'
+import storage from '../services/storage'
 
 const useLogin = () => {
   const [error, setError] = useState(null)
@@ -14,7 +15,7 @@ const useLogin = () => {
     try {
       const user = await userService.login({ email, password })
 
-      localStorage.setItem('user', JSON.stringify(user))
+      storage.saveUser(user)
       authDispatch({ type: 'LOGIN', payload: user })
     } catch (error) {
       setError(

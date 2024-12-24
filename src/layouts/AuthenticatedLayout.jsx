@@ -8,7 +8,7 @@ import CustomLink from '../components/CustomLink'
 import useAuthContext from '../hooks/useAuthContext'
 import ResponsiveNavLink from '../components/ResponsiveNavLink'
 
-const AuthenticatedLayout = ({ children }) => {
+const AuthenticatedLayout = ({ children, header }) => {
   const { logout } = useLogout()
   const [auth] = useAuthContext()
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -27,8 +27,13 @@ const AuthenticatedLayout = ({ children }) => {
               </div>
 
               <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <CustomLink to="/">Dashboard</CustomLink>
-                <CustomLink to="/test">Test</CustomLink>
+                <CustomLink to="/">Home</CustomLink>
+                {auth.user.role === 'admin' && (
+                  <CustomLink to="/dashboard">Dashboard</CustomLink>
+                )}
+                {auth.user.role !== 'user' && (
+                  <CustomLink to="/checks">Checks</CustomLink>
+                )}
               </div>
             </div>
 
@@ -94,7 +99,8 @@ const AuthenticatedLayout = ({ children }) => {
           }
         >
           <div className="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink to="/">Dashboard</ResponsiveNavLink>
+            <ResponsiveNavLink to="/">Home</ResponsiveNavLink>
+            <ResponsiveNavLink to="/dashboard">Dashboard</ResponsiveNavLink>
             <ResponsiveNavLink to="/test">Test</ResponsiveNavLink>
           </div>
 
@@ -113,7 +119,13 @@ const AuthenticatedLayout = ({ children }) => {
           </div>
         </div>
       </nav>
-
+      {header && (
+        <header className="bg-white shadow dark:bg-gray-800">
+          <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            {header}
+          </div>
+        </header>
+      )}
       <main>{children}</main>
     </>
   )

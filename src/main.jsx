@@ -8,12 +8,15 @@ import { AuthContextProvider } from './contexts/AuthContext.jsx'
 import Layout from './layouts/Layout.jsx'
 
 import Home from './pages/home/Home.jsx'
+import Dashboard from './pages/dashboard/Dashboard.jsx'
 import Login from './pages/auth/Login.jsx'
 import Signup from './pages/auth/Signup.jsx'
 import VerifyEmail from './pages/auth/VerifyEmail.jsx'
 import ForgotPassword from './pages/auth/ForgotPassword.jsx'
 import ResetPassword from './pages/auth/ResetPassword.jsx'
-import Test from './pages/home/Test.jsx'
+import Checks from './pages/check/Index.jsx'
+import Create from './pages/check/Create.jsx'
+import Edit from './pages/check/Edit.jsx'
 
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import AuthRedirect from './components/AuthRedirect.jsx'
@@ -26,8 +29,42 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute
+            allowedRoles={['user', 'manager', 'accountant', 'admin']}
+          >
             <Home />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'checks',
+        element: (
+          <ProtectedRoute allowedRoles={['manager', 'accountant', 'admin']}>
+            <Checks />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'checks/create',
+        element: (
+          <ProtectedRoute allowedRoles={['manager', 'admin']}>
+            <Create />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'checks/edit/:id',
+        element: (
+          <ProtectedRoute allowedRoles={['manager', 'admin']}>
+            <Edit />
           </ProtectedRoute>
         ),
       },
@@ -69,14 +106,6 @@ const router = createBrowserRouter([
           <AuthRedirect>
             <ResetPassword />
           </AuthRedirect>
-        ),
-      },
-      {
-        path: 'test',
-        element: (
-          <ProtectedRoute>
-            <Test />
-          </ProtectedRoute>
         ),
       },
     ],
